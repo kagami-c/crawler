@@ -90,7 +90,7 @@ if __name__ == '__main__':
 	end = 31
 	#end = 1 # just for test
 	
-	base = 'http://share.dmhy.org/topics/list/page/'
+	base = 'http://share.dmhy.org/topics/list/sort_id/2/page/'
 
 	# content of share.dmhy.org/robots.txt below
 	#
