@@ -101,3 +101,5 @@ if __name__ == '__main__':
 #
 # http://share.dmhy.org/topics/list/page/1
 # webaddr format!
+
+# the next thing to do is to parse the robots.txt file
