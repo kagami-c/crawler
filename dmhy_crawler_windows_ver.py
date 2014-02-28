@@ -1,13 +1,14 @@
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import time
 import re
+import codecs
 
 def get_page(webaddr):
 	headers = {  
 		'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'  
 	}
-	req = urllib2.Request(url=webaddr, headers=headers)
-	response = urllib2.urlopen(req)
+	req = urllib.request.Request(url=webaddr, headers=headers)
+	response = urllib.request.urlopen(req)
 	page = response.read().decode("utf-8")
 
 	return page
@@ -54,7 +55,7 @@ def get_href(title_array):
 
 if __name__ == '__main__':
 		
-	htmlfile = open('htmlfile.html', 'w')
+	htmlfile = codecs.open('htmlfile.html', 'w', 'utf-8')
 	htmlfile.write('''<!DOCTYPE html>
 <html>
 <head>
@@ -66,15 +67,15 @@ if __name__ == '__main__':
 
 	start = 1
 	increment = 1
-	end = 142
-	#end = 6 # just for test
+	#end = 142
+	end = 1 # just for test
 	
 	base = 'http://share.dmhy.org/topics/list/page/'
 
 	while(start <= end):
 		
 		webaddr = base + str(start)
-		print 'visiting: ' + webaddr
+		print('visiting: ' + webaddr)
 		
 		page = get_page(webaddr)
 		tbody = get_tbody(page)
@@ -83,13 +84,13 @@ if __name__ == '__main__':
 		ref_array = get_href(title_array)
 		
 		for s in ref_array:
-			htmlfile.write(s.encode('utf-8') + '<br />\n')
+			htmlfile.write(s + '<br />\n\r')
 
 		time.sleep(0.1)
 		start += increment
 
 	htmlfile.write('</body>\n</html>')
-	print 'Program ends.'
+	print('Program ends.')
 
 #my = FirstParser()
 #my.feed(page)
