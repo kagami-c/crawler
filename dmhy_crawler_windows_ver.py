@@ -3,22 +3,16 @@ import time
 import re
 import codecs
 
+
+# this method is the most time-comsuming part
 def get_page(webaddr):
 	headers = {  
 		'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'  
 	}
 	req = urllib.request.Request(url=webaddr, headers=headers)
 	response = urllib.request.urlopen(req)
-
-	# speed test
-	print("Get response.")
-
-	# read method is the slowest proc
-	page = response.read().decode("utf-8")
-	
-	# speed test
-	print("Finish read.")
-
+	# read method is the slowest part
+	page = response.read().decode("utf-8")	
 	return page
 
 
@@ -30,16 +24,13 @@ match_tbody = re.compile(r".*<tbody>(.*)</tbody>.*")
 def get_tbody(page):
 	line1 = delete_newline.sub(r' ', page)
 	line2 = delte_return.sub(r' ', line1)
-	tbody = match_tbody.sub(r'\1', line2)
-	
+	tbody = match_tbody.sub(r'\1', line2)	
 	return tbody
 
 
 def get_tr_s(tbody):
 	array = tbody.split(r'</tr>')
 	array.pop()
-	#for x in array:
-	#	print '!!!\n' + x + '\n'
 	return array
 
 
@@ -50,9 +41,6 @@ def get_title(tr_s):
 	title_array = []
 	for each in tr_s:
 		title_array.append(tag.sub(r'\1', each))
-
-	#for x in title_array:
-	#	print '!!!' + x + '\n'
 	return title_array
 
 
@@ -65,14 +53,10 @@ def get_href(title_array):
 	for each in title_array:
 		temp = get_a.sub(r'\1', each)
 		ref_array.append(add_addr.sub(r'href="http://share.dmhy.org', temp))
-
-	#for x in ref_array:
-	#	print x + '\n'
 	return ref_array
 
 
 # the main proc
-#print("Finished re.compile")
 if __name__ == '__main__':
 		
 	htmlfile = codecs.open('htmlfile.html', 'w', 'utf-8')
@@ -85,11 +69,13 @@ if __name__ == '__main__':
 <body>
 ''')
 
+	# the start and end page number
 	start = 1
 	increment = 1
-	end = 31
+	end = 23
 	#end = 1 # just for test
 	
+	# the base address
 	base = 'http://share.dmhy.org/topics/list/sort_id/2/page/'
 
 	# content of share.dmhy.org/robots.txt below
@@ -109,31 +95,15 @@ if __name__ == '__main__':
 		tr_s = get_tr_s(tbody)
 		title_array = get_title(tr_s)
 		ref_array = get_href(title_array)
-		
-		# speed test
-		#print("Finish parse works.")
 
 		for s in ref_array:
 			htmlfile.write(s + '<br />\n\r')
-
-		# speed test
-		#print("Write end.")
 
 		time.sleep(0.1)
 		start += increment
 
 	htmlfile.write('</body>\n</html>')
+	htmlfile.close()
 	print('Program ends.')
-
-#my = FirstParser()
-#my.feed(page)
-#print my.getresult()
-#
-#for name, value in attrs:
-#	if name == 'href':
-#		print value
-#
-# http://share.dmhy.org/topics/list/page/1
-# webaddr format!
 
 # the next thing to do is to parse the robots.txt file
