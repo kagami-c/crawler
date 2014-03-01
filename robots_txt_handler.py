@@ -1,5 +1,3 @@
-# This .py file use to handle the robots.txt of a website
-
 import urllib.request
 import re
 
@@ -13,10 +11,12 @@ def get_robots_txt(website):
 	#print("Get robots.txt")
 	return txt
 
+
 # disallow array
 disallow_array = []
 # allow array
 allow_array = []
+# the two array initialize in re_processs
 
 # handle the robots.txt content using regular expression
 def re_process(robots_txt):
@@ -28,8 +28,23 @@ def re_process(robots_txt):
 	disallow_match = re.compile(r'^Disallow: (.*)$')
 	allow_match = re.compile(r'^Allow: (.*)$')
 
+	del_r = re.compile(r'\r')
+	lines = robots_txt.split('\n')
+	for each in lines:
+		# delete \r
+		each = del_r.sub('', each)
 
-	# r return two array of disallow and allow
+		#print(each)
+
+		if disallow_match.match(each):
+			disallow_array.append(disallow_match.sub(r'\1', each))
+			#print('match disallow')
+
+		if allow_match.match(each):
+			allow_array.append(allow_match.sub(r'\1', each))
+			#print('match allow')
+
+	# return two array of disallow and allow
 
 
 # the main function
@@ -40,3 +55,11 @@ if __name__ == '__main__':
 	robots_txt = get_robots_txt(website);
 	print(robots_txt)
 
+	re_process(robots_txt)
+
+	print(disallow_array)
+	print(allow_array)
+
+# this file deal with robots.txt just in an easy way
+# and can get two array of disallow and allow 
+# which can be used in other file
